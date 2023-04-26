@@ -7,6 +7,7 @@ import { NotFoundComponent } from './modules/general/not-found/not-found.compone
 import { AppRoutingModule } from './app-routing.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { LayoutModule } from './layout/layout.module';
+import { FuseConfigModule } from './services/config/config.module';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { LayoutModule } from './layout/layout.module';
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
+    FuseConfigModule.forRoot({foo:'bar'}),
     LayoutModule
   ],
   providers: [],
