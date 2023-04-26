@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { Feature } from './feature';
 import { SeoService } from '../services/seo/seo.service';
+import { environment } from 'environments/environment';
 
 @Component({
     selector     : 'app-layout',
