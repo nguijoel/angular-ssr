@@ -9,10 +9,10 @@
     "test": "ng test",
     "coverage": "ng test --no-watch --code-coverage",
     "lint": "ng lint",
-    "dev:ssr": "ng run angular-starter:serve-ssr",
-    "serve:ssr": "node dist/angular-starter/server/main.js",
-    "build:ssr": "ng build && ng run angular-starter:server",
-    "prerender": "ng run angular-starter:prerender"
+    "dev:ssr": "ng run grace:serve-ssr",
+    "serve:ssr": "node dist/grace/server/main.js",
+    "build:ssr": "ng build && ng run grace:server",
+    "prerender": "ng run grace:prerender"
   },
   "private": true,
   "dependencies": {

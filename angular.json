@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-starter": {
+    "grace": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/angular-starter/browser",
+            "outputPath": "dist/grace/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -76,10 +76,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "angular-starter:build:production"
+              "browserTarget": "grace:build:production"
             },
             "development": {
-              "browserTarget": "angular-starter:build:development"
+              "browserTarget": "grace:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -87,7 +87,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angular-starter:build"
+            "browserTarget": "grace:build"
           }
         },
         "test": {
@@ -121,7 +121,7 @@
         "server": {
           "builder": "@angular-devkit/build-angular:server",
           "options": {
-            "outputPath": "dist/angular-starter/server",
+            "outputPath": "dist/grace/server",
             "main": "server.ts",
             "tsConfig": "tsconfig.server.json"
           },
@@ -142,12 +142,12 @@
           "builder": "@nguniversal/builders:ssr-dev-server",
           "configurations": {
             "development": {
-              "browserTarget": "angular-starter:build:development",
-              "serverTarget": "angular-starter:server:development"
+              "browserTarget": "grace:build:development",
+              "serverTarget": "grace:server:development"
             },
             "production": {
-              "browserTarget": "angular-starter:build:production",
-              "serverTarget": "angular-starter:server:production"
+              "browserTarget": "grace:build:production",
+              "serverTarget": "grace:server:production"
             }
           },
           "defaultConfiguration": "development"
@@ -161,12 +161,12 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "angular-starter:build:production",
-              "serverTarget": "angular-starter:server:production"
+              "browserTarget": "grace:build:production",
+              "serverTarget": "grace:server:production"
             },
             "development": {
-              "browserTarget": "angular-starter:build:development",
-              "serverTarget": "angular-starter:server:development"
+              "browserTarget": "grace:build:development",
+              "serverTarget": "grace:server:development"
             }
           },
           "defaultConfiguration": "production"
