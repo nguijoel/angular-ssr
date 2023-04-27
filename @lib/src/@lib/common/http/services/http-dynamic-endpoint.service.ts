@@ -5,7 +5,7 @@ import { ContentEndpoint } from './http-content-endpoint.service';
     providedIn: 'root'
   })
 export class DynamicEndpointService extends ContentEndpoint {
-    private contentType$: string;
+    private contentType$ = '';
     protected override get contentType() { return this.contentType$; }
     setContentType = (alias: string) => this.contentType$ = alias;
 }

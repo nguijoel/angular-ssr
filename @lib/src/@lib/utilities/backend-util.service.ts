@@ -1,30 +1,32 @@
-import { IEntity, IEntityDetail, IPerson, ISocialLink, IBranding, IMedia, ISortable, IStream, IProfile, IImageUrl, IDocumentLinks, ILink, IDocument, IPublishable, IBanner, ISubject, IVideo, IComment } from '@lib/common/interfaces';
+
 import { Util } from './util.service';
-import { StreamProviderType, MediaType } from '@lib/common/enums';
+import { MediaType, StreamProviderType } from '../common/enums';
+import { IComment, IEntity, IEntityDetail, IPerson, ISocialLink, IBranding, IMedia, ISortable, IStream, IProfile, IImageUrl, IDocumentLinks, ILink, IDocument, IPublishable, IBanner, ISubject, IVideo } from '../common/interfaces';
+
 
 export class BEUtil {
 
     static createEntityLink(e: any, routes: any, action?: boolean): ILink {
         const route = routes && routes[e.contentType],
-        href  =  route 
-        ? route.path.replace('{uid}',e.uid || e.id )
-                    .replace('{segment}',e.segment || e.urlSegment) 
-        : '',
-        text  = action
-        ?  route?.action || e.name 
-        : e.name,
-        type= route?.type || e.contentType;
+            href = route
+                ? route.path.replace('{uid}', e.uid || e.id)
+                    .replace('{segment}', e.segment || e.urlSegment)
+                : '',
+            text = action
+                ? route?.action || e.name
+                : e.name,
+            type = route?.type || e.contentType;
 
         //if(!href) console.log('NO ROUTE', e.contentType);
 
-        return {href, text, type};
+        return { href, text, type };
     }
 
     static setEntity(model: IEntity, data: any): void {
         if (!(data && data.system)) return;
         const system = data.system;
 
-        if(!system) return console.log('NO SYSTEM:', data);
+        if (!system) return console.log('NO SYSTEM:', data);
         model.uid = system.id;
         model.name = system.name;
         model.segment = system.urlSegment;
@@ -33,7 +35,7 @@ export class BEUtil {
         model.updateDate = Util.parseExactDate(system.editedAt);
     }
 
-    static setIDocument(model: IDocument, data: any, action: string = 'form'): void {
+    static setIDocument(model: IDocument, data: any, action = 'form'): void {
         model.description = data.description;
         model.instructions = data.instructions;
         model.disclaimer = data.disclaimer;
@@ -67,9 +69,9 @@ export class BEUtil {
         model.updateDate = source.updateDate;
     }
 
-    static setEntityDetail(data: any,  model?: IEntityDetail): IEntityDetail {
+    static setEntityDetail(data: any, model?: IEntityDetail): IEntityDetail {
 
-        if (!data) return;
+        if (!data) return {} as IEntityDetail;
 
         model = model || {} as IEntityDetail;
 
@@ -93,35 +95,38 @@ export class BEUtil {
         model.shortDescription = source.shortDescription;
     }
 
-    static setMedia(data: any, model?: IMedia, crop?: string, ignoreEntity?: boolean): IMedia {
+    static setMedia(data: any, model?: IMedia, crop?: string, ignoreEntity?: boolean): IMedia | undefined {
         if (!data)
             return;
-            
+
         model = model || {} as IMedia;
-        
+
         const fields = BEUtil.getFields(data) || {};
 
-        if(!ignoreEntity){
+        if (!ignoreEntity) {
             BEUtil.setEntity(model, data);
             model.description = fields.description;
         }
-       
+
         model.type = BEUtil.getContentType(data);
         model.credits = BEUtil.setIPerson(fields.credits);
 
-        if (model.type === 'video'){
-           const video =  BEUtil.setIVideo(fields);
-           model.id = video.id;
-           model.provider = video.provider;
-           model.src = video.hdSrc;
-           model.image = {
-            original: video.posterUrl,
-            thumbnail: video.thumbUrl,
-            url: video.posterUrl,
-            crop: 'wide'
-        };}
+        if (model.type === 'video') {
+            const video = BEUtil.setIVideo(fields);
+            if (video) {
+                model.id = video.id;
+                model.provider = video.provider;
+                model.src = video.hdSrc;
+                model.image = {
+                    original: video.posterUrl,
+                    thumbnail: video.thumbUrl,
+                    url: video.posterUrl,
+                    crop: 'wide'
+                };
+            }
+        }
         else if (model.type === 'audio')
-            model.src =   Util.resolveUrl(fields.umbracoFile);
+            model.src = Util.resolveUrl(fields.umbracoFile);
         else
             model.image = BEUtil.createImgeUrl(fields.umbracoFile, crop || 'wide');
 
@@ -129,7 +134,7 @@ export class BEUtil {
     }
 
     static setIProfile(model: IProfile, data: any, prop: any): void { //TODO: Inherit from IEnity
-        model.iso3 = Util.getProperty<string>(data, 'country');
+        model.iso3 = Util.getProperty<string>(data, 'country') || '';
         model.country = model.iso3;
     }
 
@@ -143,7 +148,7 @@ export class BEUtil {
         model.darkMode = fields.darkMode;
         model.textAlignment = fields.textAlignment;
         model.icon = fields.icon;
-        if(fields.image) model.image = BEUtil.createImgeUrl(BEUtil.getFields(fields.image)?.umbracoFile, crop || 'wide');
+        if (fields.image) model.image = BEUtil.createImgeUrl(BEUtil.getFields(fields.image)?.umbracoFile, crop || 'wide');
     }
 
     static setIPublishable(model: IPublishable, fields: any): void {
@@ -152,7 +157,7 @@ export class BEUtil {
         model.featured = fields.featured;
     }
 
-    static setIVideo(fields: any, model?: IVideo): IVideo {
+    static setIVideo(fields: any, model?: IVideo): IVideo | undefined {
         if (!fields) return;
         if (!model) model = {} as IVideo;
         model.id = fields.videoId;
@@ -177,9 +182,9 @@ export class BEUtil {
 
     static setIBanner(model: IBanner, fields: any, media?: IMedia): void {
         if (fields.bannerDisabled || (fields.mediaAsBanner && !media)) return;
-        model.banner = fields.mediaAsBanner ? media : BEUtil.setMedia(fields.banner, null, 'wide');
-        model.bannerTopOffset = fields.topPosition ? `${fields.topPosition}%` : null;
-        model.bannerLeftOffset = fields.leftPosition ? `${fields.leftPosition}%` : null;
+        model.banner = fields.mediaAsBanner ? media : BEUtil.setMedia(fields.banner, undefined, 'wide');
+        model.bannerTopOffset = fields.topPosition ? `${fields.topPosition}%` : undefined;
+        model.bannerLeftOffset = fields.leftPosition ? `${fields.leftPosition}%` : undefined;
     }
 
     static setIStream(model: IStream, prop: any): void {
@@ -188,9 +193,12 @@ export class BEUtil {
         if (!model.streamLink)
             return;
 
-        const now = new Date();
-        model.streamStart = Util.parseDate(prop.streamStart);
-        model.streamEnd = Util.parseDate(prop.streamEnd);
+        const now = new Date(),
+        sd =  Util.parseDate(prop.streamStart),
+        ed = Util.parseDate(prop.streamEnd);
+
+        if(sd)model.streamStart = sd;
+        if(ed)model.streamEnd = ed;
         model.streamOnly = prop.streamOnly;
         model.streamDisabled = prop.streamDisabled;
         model.chatLink = prop.chatLink;
@@ -204,7 +212,7 @@ export class BEUtil {
         model.isStreaming = model.isStream && model.streamStart <= now;
     }
 
-    static setIPerson(fields: any, model?: IPerson): IPerson {
+    static setIPerson(fields: any, model?: IPerson): IPerson | undefined {
         if (!fields)
             return;
 
@@ -247,12 +255,12 @@ export class BEUtil {
         return data.sort((n1, n2) => n2.ordinal - n1.ordinal);
     }
 
-    static createAvatar(data: any): IImageUrl {
+    static createAvatar(data: any): IImageUrl | undefined {
         if (!data) return;
         return BEUtil.createImgeUrl(BEUtil.getFields(data)?.umbracoFile);
     }
 
-    static createSocialLinks(fields: any): ISocialLink[] {
+    static createSocialLinks(fields: any): ISocialLink[] | undefined {
 
         if (!Util.isAny(fields.socialLinks))
             return;
@@ -267,41 +275,40 @@ export class BEUtil {
         return Util.sortBy(model, 'provider');
     }
 
-   static createContentLinks(links: any[]): ILink[] {
-     if (!Util.isAny(links))
+    static createContentLinks(links: any[]): ILink[] | undefined{
+        if (!Util.isAny(links))
             return;
-        const result = links.map(link => BEUtil. createContentLink(link));
-        return Util.sortBy(result, 'text');
+        const result = links.map(link => BEUtil.createContentLink(link));
+        return Util.sortBy<ILink>(result, 'text');
     }
 
     static createContentLink(link: any): ILink {
-        if(link) return {href: link.url, text: link.name};
-    }
+        return link? { href: link.url, text: link.name }: {} as ILink}
 
-    static createImgeUrl(field: any, crop?: string): IImageUrl {
+    static createImgeUrl(field: any, crop?: string): IImageUrl | undefined {
 
         if (!field)
             return;
 
         const crops = field.crops || {},
             cropUrl = crop ? crops[crop] : null,
-            image =  {
-            original: Util.resolveUrl(field.src),
-            thumbnail: Util.resolveUrl(crops.thumbnail),
-            url: Util.resolveUrl(cropUrl || field.src),
-            crop: cropUrl ? crop : null
-        } as IImageUrl;
+            image = {
+                original: Util.resolveUrl(field.src),
+                thumbnail: Util.resolveUrl(crops.thumbnail),
+                url: Util.resolveUrl(cropUrl || field.src),
+                crop: cropUrl ? crop : null
+            } as IImageUrl;
 
-       if(image.thumbnail === image.url)
-           image.thumbnail = BEUtil.createImgeCropUrl(image.url, 600); 
+        if (image.thumbnail === image.url)
+            image.thumbnail = BEUtil.createImgeCropUrl(image.url, 600) || image.thumbnail ;
 
-        image.avatar = BEUtil.createImgeCropUrl(image.url, 64); 
-        
+        image.avatar = BEUtil.createImgeCropUrl(image.url, 64);
+
         return image;
     }
 
-    static createImgeCropUrl(baseUrl: string, crop: number): string {
-        return  baseUrl ? `${baseUrl}?mode=crop&width=${crop}`: null; 
+    static createImgeCropUrl(baseUrl: string, crop: number): string | undefined {
+        return baseUrl ? `${baseUrl}?mode=crop&width=${crop}` : undefined;
     }
 
     static createDocumentLinks(field: any): any {
@@ -320,7 +327,7 @@ export class BEUtil {
             createDate: null,
             updateDate: null,
             clickable: true
-        } as IDocument;
+        } as unknown as IDocument;
 
         BEUtil.setIDocument(
             model,
@@ -335,13 +342,12 @@ export class BEUtil {
         return model;
     }
 
-    static getLinkContentId(fields: any, name: string): string {
-        if (fields && fields[name])
-            return fields[name]['id'];
+    static getLinkContentId(fields: any, name: string): string |undefined {
+          return fields && fields[name]? fields[name]['id'] : undefined;
     }
 
     static isMedia(type: string): boolean {
-       return type === 'video' || type === 'audio';
+        return type === 'video' || type === 'audio';
     }
 
     //#region Members
@@ -392,7 +398,7 @@ export class BEUtil {
     //#region Helpers
     static getFields(data: any): any { return data['fields']; }
 
-    private static getContentType(data: any): any { return data.system ?  data.system.contentType.toLowerCase(): null; }
+    private static getContentType(data: any): any { return data.system ? data.system.contentType.toLowerCase() : null; }
 
     private static createIDocumentFromLink(data: any): IDocument {
         const model = {
@@ -400,7 +406,7 @@ export class BEUtil {
             name: data.name,
             createDate: null,
             updateDate: null
-        } as IDocument;
+        } as unknown as IDocument;
 
         BEUtil.setIDocument(
             model,

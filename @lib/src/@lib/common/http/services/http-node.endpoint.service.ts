@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { environment } from '@lib/environments';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Util } from '@lib/utilities';
+import { environment } from '../../../environments';
+import { Util } from '../../../utilities';
+
 
 @Injectable({ providedIn: 'root' })
 export class CoreNodeEnpointService {
-  private config = environment['comment'];
+  private config = (environment as any)['comment'];
   private isACL = Util.isACL(environment);
 
   constructor(private http: HttpClient) { }
@@ -68,7 +69,7 @@ export class CoreNodeEnpointService {
   }
 
   private get headers(): HttpHeaders {
-    const headers =
+    const headers: any =
     {
       'x-client-id': environment.clientId
     };

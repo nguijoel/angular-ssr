@@ -79,8 +79,12 @@ export class HttpUtil {
         return  response && response.code === 'consent_required';
     }
 
-    public static findHttpResponseMessage(messageToFind: string, data: HttpResponse<any> | any, seachInCaptionOnly = true, includeCaptionInResult = false): string {
-        return this.findHttpResponseMessagePart(messageToFind.toLowerCase(), this.getHttpResponseMessage(data), seachInCaptionOnly, includeCaptionInResult);
+    public static findHttpResponseMessage(messageToFind: string, data: HttpResponse<any> | any, seachInCaptionOnly = true, includeCaptionInResult = false): string | undefined {
+        return this.findHttpResponseMessagePart(
+            messageToFind.toLowerCase(),
+            this.getHttpResponseMessage(data),
+            seachInCaptionOnly,
+            includeCaptionInResult);
     }
 
     public static getResponseBody(response: HttpResponseBase) {
@@ -144,12 +148,13 @@ export class HttpUtil {
             return result;
         }
         catch (error) {
+            console.log(error);
         }
 
-        const simpleObject = {};
+        const simpleObject: any = {};
 
         for (const prop in object) {
-            if (!object.hasOwnProperty(prop)) 
+            if (!object.hasOwn(prop)) 
                 continue;
             
             if (typeof (object[prop]) == 'object') 
@@ -193,7 +198,7 @@ export class HttpUtil {
 
     //#region Private
 
-    private static findHttpResponseMessagePart(searchString: string, httpMessages: string[], seachInCaptionOnly = true, includeCaptionInResult = false): string | undefined {
+    private static findHttpResponseMessagePart(searchString: string, httpMessages: string[], seachInCaptionOnly = true, includeCaptionInResult = false): string {
         for (const message of httpMessages) {
             const fullMessage = HttpUtil.splitInTwo(message, this.captionAndMessageSeparator);
 
@@ -217,9 +222,11 @@ export class HttpUtil {
 
             return messages.join('<br>');
         }
+
+        return '';
     }
 
-    private static extractHttpResponseMessagePart(message, includeCaptionInResult): string {
+    private static extractHttpResponseMessagePart(message: string, includeCaptionInResult: boolean): string {
         if (includeCaptionInResult || !message)
             return message;
 

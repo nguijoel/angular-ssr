@@ -6,40 +6,38 @@ export interface IBasicUser {
     id: string;
     firstName: string;
     fullName: string;
-    avatar: string;
+    avatar?: string;
     externalId?: string;
  }
 
 export interface IUser extends IBasicUser {
     email: string;
-    avatar: string;
-    localAvatar: string;
-    avatarChoice: number;
-    providerAvatar: string;
-    jobTitle: string;
-    phoneNumber: string;
-    isEnabled: boolean;
-    isLockedOut: boolean;
-    isAdmin: boolean;
-    emailConfirmed: boolean;
-    identityProvider: string;
-    localAccount: boolean;
-    roles: string[];
+    localAvatar?: string;
+    providerAvatar?: string;
+    jobTitle?: string;
+    phoneNumber?: string;
+    isEnabled?: boolean;
+    isLockedOut?: boolean;
+    isAdmin?: boolean;
+    emailConfirmed?: boolean;
+    identityProvider?: string;
+    localAccount?: boolean;
+    roles?: string[];
     permissions: PermissionValues[];
 }
 
 export interface IEntity {
     uid: string;
     name: string;
-    createDate: Date;
-    updateDate: Date;
+    createDate?: Date;
+    updateDate?: Date;
     segment?: string;
     contentType?: string;
 }
 
 export interface IPublishable {
-    publishedAt: Date;
-    firstPublishedAt: Date;
+    publishedAt?: Date;
+    firstPublishedAt?: Date;
     featured: boolean;
 }
     
@@ -78,12 +76,12 @@ export interface IVideo {
 
 export interface IMedia extends IEntity  {
     id: number;
-    image: IImageUrl;
+    image?: IImageUrl;
     type: string;
     src: string;
     width: number;
     height: number;
-    credits: IPerson;
+    credits?: IPerson;
     description: string;
     provider: string;
 }
@@ -104,10 +102,10 @@ export interface ISocialLink {
 }
 
 export interface IPerson {
-    avatar: IImageUrl;
+    avatar?: IImageUrl;
     website: string;
     role: string;
-    socialLinks: ISocialLink[];
+    socialLinks?: ISocialLink[];
 }
 
 export interface INodeInfo {
@@ -288,9 +286,9 @@ export interface ICardOption {
 }
 
 export interface IBanner {
-    banner: IMedia;
-    bannerTopOffset: string;
-    bannerLeftOffset: string;
+    banner?: IMedia;
+    bannerTopOffset?: string;
+    bannerLeftOffset?: string;
 }
 
 export interface IListService {

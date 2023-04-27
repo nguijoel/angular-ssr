@@ -4,24 +4,24 @@ import { BEUtil } from "../../utilities";
 export class SiteInfo implements IEntity, IEntityDetail  {
     uid: string;
     name: string;
-    createDate: Date;
-    updateDate: Date;
+    createDate?: Date;
+    updateDate?: Date;
     strapline?: string;
     description?: string;
     shortDescription?: string;
     hint?: string;
     
     noReplyEmail: string;
-    logo: IImageUrl;
-    socialLinks: ISocialLink[];
+    logo?: IImageUrl;
+    socialLinks?: ISocialLink[];
     address: string;
     email: string;
     mobile: string;
     phone: string;
     disclaimer: string;
-    openingTimesId: string;
+    openingTimesId?: string;
     timezone: string;
-    policies: ILink[];
+    policies?: ILink[];
 
     constructor (data: any){ 
   

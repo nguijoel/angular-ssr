@@ -3,21 +3,19 @@
 // ====================================================
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { DBkeys, LocalStoreManager } from '@lib/@helpers';
-import { ILoginResponse } from '@lib/common/http/http.types';
-import { environment } from '@lib/environments';
+import { environment } from '../../../environments';
+import { DBkeys, LocalStoreManager } from '../../storage';
+import { ILoginResponse } from '../http.types';
+
 
 
 const TS = (environment as any).ts;
 
 @Injectable({ providedIn: 'root' })
 export class AuthEndpointService {
-    loginRedirectUrl: string;
-    logoutRedirectUrl: string;
-    reLoginDelegate: () => void;
     private previousIsLoggedInCheck = false;
     private $loginStatus = new Subject<boolean>();
-    private $ts: number;
+    private $ts = 0;
 
 
     constructor(
@@ -34,7 +32,7 @@ export class AuthEndpointService {
 
     get accessToken(): string {
         this.reevaluateLoginStatus();
-        return this.getEnvData(DBkeys.ACCESS_TOKEN);
+        return this.getEnvData(DBkeys.ACCESS_TOKEN) || '';
     }
 
     get refreshToken(): string {
@@ -99,12 +97,13 @@ export class AuthEndpointService {
         this.previousIsLoggedInCheck = isLoggedIn;
     }
 
-    private getEnvData(key: string): string {
+    private getEnvData(key: string): string | null {
 
         if (TS  &&  TS !== this.ts) return null;
 
         return this.localStorage.getData(key);
     }
 
-    private get ts(): number {return this.$ts || (this.$ts = this.localStorage.getDataObject<number>(DBkeys.APP_TS));}
+    private get ts(): number {
+        return this.$ts || (this.$ts = this.localStorage.getDataObject<number>(DBkeys.APP_TS) || 0);}
 }

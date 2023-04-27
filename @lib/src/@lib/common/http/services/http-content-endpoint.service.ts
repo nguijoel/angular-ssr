@@ -2,12 +2,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AuthEndpointFactory } from '@lib/core/auth/services/auth-endpoint-factory.service';
+import { AuthEndpointFactory } from './http-auth-endpoint-factory.service';
+
 
 @Injectable()
 export class ContentEndpoint extends AuthEndpointFactory {
 
-  protected get contentType() { return null; }
+  protected get contentType(): string { return ''; }
   private readonly contentUrlPath: string = '/content/';
 
   getContentNodeEndpoint<T>(node: string): Observable<T> {
@@ -26,7 +27,7 @@ export class ContentEndpoint extends AuthEndpointFactory {
   }
 
   getContentsEndpoint<T>(page?: number, size?: number, level?: number, sort?: string, node?: string): Observable<T> {
-    const url = this.resolveUrl('list', null, node) + this.appendPagingQuery(page, size, level, sort);
+    const url = this.resolveUrl('list', undefined, node) + this.appendPagingQuery(page, size, level, sort);
     return this.http.get<T>(url, this.getRequestHeaders())
     .pipe<T>(catchError(error => this.handleError(error, () => this.getContentsEndpoint(page, size, level, sort, node))));
   }

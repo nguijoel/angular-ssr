@@ -10,27 +10,27 @@ import { ILoginResponse } from '../http.types';
 
 @Injectable()
 export class EndpointFactoryBase {
-    private taskPauser: Subject<any>;
-    private isRefreshingLogin: boolean;
+    private taskPauser?: Subject<any>;
+    private isRefreshingLogin = false;
    
     constructor(protected http: HttpClient) { }
-    protected get loginUrl(): string { return null; }
-    protected get baseApiUrl(): string { return null; }
-    protected get refreshToken(): string { return null; }
-    protected get accessToken(): string { return null; }
-    protected get apiVersion(): string | number { return null; } 
-    protected get appVersion(): string { return null; }
-    protected get appDomain(): string { return null; }
+    protected get loginUrl(): string { return ''; }
+    protected get baseApiUrl(): string { return ''; }
+    protected get refreshToken(): string { return ''; }
+    protected get accessToken(): string { return ''; }
+    protected get apiVersion(): string | number { return ''; } 
+    protected get appVersion(): string { return ''; }
+    protected get appDomain(): string { return ''; }
     protected get clientId(): string { return 'ONTOO';}
-    protected get acceptLanguage() { return null; }
-    protected get multiLanguage() { return null; }
+    protected get acceptLanguage() { return ''; }
+    protected get multiLanguage() { return ''; }
     
     getLoginEndpoint = <T>(userName: string, password: string, credentials?: boolean, endpoint?: string): Observable<T> =>
     this.loginEndpoint<T>(userName, password,'password', credentials, endpoint);
    
-    getClientLoginEndpoint = <T>(): Observable<T> => this.loginEndpoint<T>(null, null,'client');
+    getClientLoginEndpoint = <T>(): Observable<T> => this.loginEndpoint<T>('', '','client');
     
-    getLoginExternalEndpoint = <T>(): Observable<T> => this.loginEndpoint<T>(null,null,'external', true);
+    getLoginExternalEndpoint = <T>(): Observable<T> => this.loginEndpoint<T>('','','external', true);
    
     getRefreshLoginEndpoint<T>(): Observable<T> {
 
@@ -57,7 +57,7 @@ export class EndpointFactoryBase {
 
     protected get loginScope(): string{return  'openid email phone profile offline_access roles';}
 
-    protected appendPagingQuery(page: number, size: number, level?: number, sort?: string, extended?: string[]){
+    protected appendPagingQuery(page?: number, size?: number, level?: number, sort?: string, extended?: string[]){
       
         const q = [];
 
@@ -88,7 +88,7 @@ export class EndpointFactoryBase {
 
    protected getRequestHeaderOptions(): any {
     
-    const options = {
+    const options: any = {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         Authorization: 'Bearer ' + this.accessToken,
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -142,7 +142,10 @@ export class EndpointFactoryBase {
             return this.throwErrorMessage(error);
    }
 
-    private isLoginRedirect = (url: string): boolean => url &&  this.loginUrl && url.toLowerCase().includes(this.loginUrl.toLowerCase());
+    private isLoginRedirect = (url: string): boolean => 
+    url && this.loginUrl
+    ? url.toLowerCase().includes(this.loginUrl.toLowerCase()) 
+    : false;
 
     private throwErrorMessage(error: any, context?: string){
         
@@ -174,7 +177,7 @@ export class EndpointFactoryBase {
             if (this.taskPauser) {
                 this.taskPauser.next(continueOp);
                 this.taskPauser.complete();
-                this.taskPauser = null;
+                this.taskPauser = undefined;
             }
         });
     }
@@ -185,7 +188,7 @@ export class EndpointFactoryBase {
   
         // eslint-disable-next-line @typescript-eslint/naming-convention
         const headers = this.appendDomain({ 'Content-Type': 'application/x-www-form-urlencoded'}, this.appDomain),
-        options =  { headers: new HttpHeaders(headers)};
+        options: any =  { headers: new HttpHeaders(headers)};
 
         let  params = new HttpParams()
         .append('grant_type', grant)
@@ -197,7 +200,7 @@ export class EndpointFactoryBase {
          .append('username', username)
          .append('password', password);
         if(credentials) options['withCredentials'] = true;
-        return this.http.post<T>(endpoint || this.loginUrl,  params.toString(), options);
+        return this.http.post(endpoint || this.loginUrl,  params.toString(), options).pipe(map(e=> e as T));
     }
 
     private appendDomain(options: any, domain: string): any {

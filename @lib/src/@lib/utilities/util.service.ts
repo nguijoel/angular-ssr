@@ -2,9 +2,10 @@
 // Creative Medium Templates
 // ====================================================
 import { ConfigurationService } from '../common/configuration/configuration.service';
-import { PagingModel } from '@lib/common/models/paging.model';
+import { PagingModel } from '../common/models/paging.model';
 
-const providerIcons = {
+
+const providerIcons: any = {
     
     twitter: {
         handle: true,
@@ -53,7 +54,7 @@ export class Util {
     }
 
     static isFullUrl(url: string): boolean {
-        return url && url.toLowerCase().startsWith('http');
+        return url && url.toLowerCase().startsWith('http') || false;
     }
 
     static truncate(text: string, maxLength: number): string {
@@ -69,7 +70,7 @@ export class Util {
         const gt = desc ? -1 : 1,
             lt = desc ? 1 : -1;
 
-        return source?.sort((a, b) => {
+        return source?.sort((a: any, b: any) => {
             if (a[field] > b[field])
                 return gt;
 
@@ -109,11 +110,11 @@ export class Util {
         return d;
     }
 
-    static parseDate(value: any, checkNull?: boolean): Date {
+    static parseDate(value: any, checkNull?: boolean): Date | undefined {
         if (!value)
             return;
 
-        let date: Date;
+        let date: Date | undefined;
 
         if (value instanceof Date)
             date = value;
@@ -130,16 +131,15 @@ export class Util {
         return checkNull ? Util.checkNullDate(date) : date;
     }
 
-    static checkNullDate(date: Date): Date {
+    static checkNullDate(date: Date | undefined): Date | undefined {
         if (!date || date.getFullYear() === 0)
             return;
 
         return date;
     }
 
-    static parseDateFromTs(timestamp: number): Date {
-        if (timestamp)
-            return new Date(timestamp * 1000);
+    static parseDateFromTs(timestamp: number): Date | undefined {
+        return timestamp ? new Date(timestamp * 1000) : undefined;
     }
 
     static isArray(data: any): boolean {
@@ -164,18 +164,16 @@ export class Util {
     }
 
 
-    static getPublishDate(data: any): Date {
+    static getPublishDate(data: any): Date | undefined {
         return Util.parseExactDate(data.publishDate || data.publishedAt);
     }
 
-    static getFirstPublishDate(data: any): Date {
+    static getFirstPublishDate(data: any): Date | undefined {
         return Util.parseExactDate(data.firstPublishDate || data.firstPublishedAt);
     }
 
-    static firstOrDefault<T>(data: T[]): T {
-        if (data && data.length)
-            return data[0];
-
+    static firstOrDefault<T>(data: T[]): T | undefined {
+        return data?.length  ? data[0] : undefined;
     }
 
     static forEach<T>(data: T[], predicate: (datum: T) => void) {
@@ -184,7 +182,7 @@ export class Util {
                 predicate(datum);
     }
 
-    static parseExactDate(date: string, checkEpoc?: boolean): Date {
+    static parseExactDate(date: string, checkEpoc?: boolean): Date | undefined {
 
         if (!date) return;
 
@@ -195,9 +193,9 @@ export class Util {
         return d;
     }
 
-    static jsonTryParse(value: string) {
+    static jsonTryParse(value: string | null) {
         try {
-            return JSON.parse(value);
+            if(value) return JSON.parse(value);
         }
         catch (e) {
             if (value === 'undefined')
@@ -276,13 +274,13 @@ export class Util {
     static resolveUrl(url: string): string {
         return url
             ? ConfigurationService.webUrl + url
-            : null;
+            : '';
     }
 
     static resolveImageSrc(data: any): string {
         return data && data.src
             ? Util.resolveUrl(data.src)
-            : null;
+            : '';
     }
     static resolveContentImageSrc(content: string, media: any): string {
         if (media)
@@ -315,7 +313,7 @@ export class Util {
     static resolveImageUrl(data: any): string {
         return data && data.url
             ? Util.resolveUrl(data.url)
-            : null;
+            : '';
     }
 
     static resolvePaging<T>(data: any, provider: (tdata: any) => T[], $page?: number, $size?: number): PagingModel<T> {
@@ -330,16 +328,16 @@ export class Util {
     }
 
     static mapTo(source: any, keys: string[]): any {
-        const target = {};
+        const target: any = {};
         keys.forEach(key => target[key] = source[key]);
         return target;
     }
 
-    static getPropertyBool(model: any, name: string, defaultValue?: boolean): boolean {
+    static getPropertyBool(model: any, name: string, defaultValue?: boolean): boolean | undefined {
         return Util.getProperty<boolean>(model, name, defaultValue, value => Util.parseBool(value));
     }
 
-    static getProperty<T>(model: any, name: string, defaultValue?: T, parser?: (value: any) => T): T {
+    static getProperty<T>(model: any, name: string, defaultValue?: T, parser?: (value: any) => T): T | undefined {
 
         if (!model.properties)
             return defaultValue;
@@ -391,8 +389,8 @@ export class Util {
         if (action === 'link') return { text: 'Open', icon: 'link' };
     }
 
-    static last<T>(data: T[]): T {
-        if (Util.isArray(data)) return data[data.length - 1];
+    static last<T>(data: T[]): T | undefined {
+        return Util.isArray(data) ? data[data.length - 1] : undefined;
     }
 
 }

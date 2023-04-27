@@ -1,4 +1,5 @@
-import { INodeAuthor, INodeContent, INodeEntity, INodeMedia, INodeVote } from '@lib/common/node';
+
+import { INodeVote ,INodeAuthor, INodeContent, INodeEntity, INodeMedia } from '../common/node';
 
 export class NodeUtil {
   static setMedia = (data: any, model?: INodeMedia): INodeMedia => {
@@ -26,7 +27,7 @@ export class NodeUtil {
     if(data.user_fav?.created_at || model.favorite) model.favorite = data.user_fav.created_at;
   };  
 
-  static setReplyEntity = (data: any, model?: INodeContent): INodeContent => {
+  static setReplyEntity = (data: any, model?: INodeContent): INodeContent |undefined => {
 
     if (!data.reply_uid) return;
 
@@ -40,7 +41,7 @@ export class NodeUtil {
     return model;
   };
 
-  static setPostEntity = (data: any, model?: INodeContent): INodeContent => {
+  static setPostEntity = (data: any, model?: INodeContent): INodeContent | undefined => {
 
     if (!data.post_uid) return;
 

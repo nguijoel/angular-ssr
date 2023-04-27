@@ -51,7 +51,13 @@
             ],
             "scripts": [],
             "serviceWorker": true,
-            "ngswConfigPath": "ngsw-config.json"
+            "ngswConfigPath": "ngsw-config.json",
+            "fileReplacements": [
+              {
+                "replace": "@lib/src/@lib/environments/environment.ts",
+                "with": "src/environments/environment.ts"
+              }
+            ]
           },
           "configurations": {
             "production": {
@@ -69,7 +75,7 @@
               ],
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
+                  "replace": "@lib/src/@lib/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
               ],              
@@ -137,10 +143,22 @@
           "options": {
             "outputPath": "dist/grace/server",
             "main": "server.ts",
-            "tsConfig": "tsconfig.server.json"
+            "tsConfig": "tsconfig.server.json",
+            "fileReplacements": [
+              {
+                "replace": "@lib/src/@lib/environments/environment.ts",
+                "with": "src/environments/environment.ts"
+              }
+            ]
           },
           "configurations": {
             "production": {
+            "fileReplacements": [
+              {
+                "replace": "@lib/src/@lib/environments/environment.ts",
+                "with": "src/environments/environment.prod.ts"
+              }
+            ],
               "outputHashing": "media"
             },
             "development": {
