@@ -23,7 +23,7 @@ export class AuthEndpointService {
     }
 
     get isLoggedIn(): boolean {
-        return this.getEnvData(DBkeys.ACCESS_TOKEN) !== null;
+       return this.getEnvData(DBkeys.ACCESS_TOKEN) !== undefined;
     }
 
     get acceptLanguage() { return this.localStorage.getData(DBkeys.LANG_ACCEPT); }
@@ -48,7 +48,7 @@ export class AuthEndpointService {
         return this.$loginStatus.asObservable();
     }
 
-    processLoginResponse(response: ILoginResponse, rememberMe = false): void {
+    processLoginResponse(response: ILoginResponse, rememberMe = false): boolean {
 
         if (response.access_token == null)
             throw new Error('Received accessToken was empty');
@@ -60,6 +60,7 @@ export class AuthEndpointService {
 
         this.saveUserDetails(accessToken, refreshToken, tokenExpiryDate, rememberMe);
         this.reevaluateLoginStatus();
+        return true;
     }
 
     private createExpiry(expiresIn: number): Date {

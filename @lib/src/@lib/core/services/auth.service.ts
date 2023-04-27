@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { AuthEndpointFactory, AuthEndpointService, ILoginResponse } from '../../common/http';
-import { ConfigurationService } from '../../common/configuration';
+import { Observable } from 'rxjs';
 
 @Injectable({providedIn:'root'})
 export class AuthService {
@@ -10,24 +10,15 @@ export class AuthService {
         private endpointService: AuthEndpointService
     ) { }
 
-    login(userName: string, password: string, rememberMe?: boolean) {
+    login(userName: string, password: string, rememberMe?: boolean): Observable<boolean> {
         return this.endpointFactory.getLoginEndpoint<ILoginResponse>(userName, password).pipe(
-            map(response => {
-                this.endpointService.processLoginResponse(response, rememberMe);
-                return true;
-            }));
+          map(response => this.endpointService.processLoginResponse(response, rememberMe)));
     }
 
-    sysLogin() {
-        if(ConfigurationService.clientId)
+    sysLogin(): Observable<boolean> {
         return this.endpointFactory.getClientLoginEndpoint<ILoginResponse>().pipe(
-            map(response => this.endpointService.processLoginResponse(response, false)));
-
-        return this.endpointFactory.getLoginEndpoint<ILoginResponse>(ConfigurationService.credentials.username, ConfigurationService.credentials.password).pipe(
-            map(response => this.endpointService.processLoginResponse(response, false)));
+        map(response => this.endpointService.processLoginResponse(response, false)));
     }
 
-    get isLoggedIn(): boolean {
-        return this.endpointService.isLoggedIn;
-    }
+    get isLoggedIn(): boolean { return this.endpointService.isLoggedIn;}
 }

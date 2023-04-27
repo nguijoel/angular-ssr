@@ -28,7 +28,7 @@ export class AuthEndpointFactory extends EndpointFactoryBase {
 
     protected get apiVersionNumber(): number { return ConfigurationService.apiVersionNumber; } 
 
-    protected override processLoginResponse(response: ILoginResponse): void {
-         this.endpoint.processLoginResponse(response, this.endpoint.rememberMe);
+    protected override processLoginResponse(response: ILoginResponse): boolean {
+       return this.endpoint.processLoginResponse(response, this.endpoint.rememberMe);
     }
 }

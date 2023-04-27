@@ -24,7 +24,7 @@ export class EndpointFactoryBase {
     protected get clientId(): string { return 'ONTOO';}
     protected get acceptLanguage() { return ''; }
     protected get multiLanguage() { return ''; }
-    
+   
     getLoginEndpoint = <T>(userName: string, password: string, credentials?: boolean, endpoint?: string): Observable<T> =>
     this.loginEndpoint<T>(userName, password,'password', credentials, endpoint);
    
@@ -154,15 +154,14 @@ export class EndpointFactoryBase {
          : null;
 
          if(context && message) 
-            return throwError(context + ' (' + message + ')');
-
+            return throwError(() => new Error(context + ' (' + message + ')'));
          else if(context)
-            return throwError(context);
+            return throwError(() => new Error(context));
 
          else if(message)
-            return throwError(message);
+            return throwError(() => new Error(message));
         
-        return throwError(error);
+        return throwError(() => new Error(error));
     }
 
     private pauseTask(continuation: () => Observable<any>) {

@@ -11,4 +11,4 @@ export interface  IEnvironment {
     ts?: number;
     keys?: any;
     plugins?: any;
-};
+}

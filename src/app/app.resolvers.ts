@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CoreInitService } from '../../@lib/src/@lib/core';
+import { CoreInitService, SiteInfo } from '../../@lib/src/@lib/core';
 
 
 @Injectable({providedIn: 'root'})
@@ -15,7 +15,7 @@ export class AppResolver
      * Use this resolver to resolve initial mock-api for the application
      *
      */
-    resolve(): Observable<unknown> {
+    resolve(): Observable<SiteInfo> {
         return this.coresvc.init()
     }
 }
