@@ -20,22 +20,36 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
               "src/assets",
               "src/manifest.webmanifest",
               "src/sitemap.xml",
-              "src/robots.txt"              
+              "src/robots.txt" ,
+              "src/web.config",
+              {
+                "glob": "_redirects",
+                "input": "src",
+                "output": "/"
+              }             
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "@lib/src/@fuse/styles",
+                "src/@fuse/styles"
+              ]
+            },
             "styles": [
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "src/assets/params/css/fonts.googleapis.min.css",
-              "src/styles.css"
+              "@lib/src/@fuse/styles/tailwind.scss",
+              "@lib/src/@fuse/styles/themes.scss",
+              "@lib/src/styles/vendors.scss",
+              "@lib/src/@fuse/styles/main.scss",
+              "@lib/src/styles/styles.scss",
+              "src/styles/styles.scss",
+              "@lib/src/styles/tailwind.scss"
             ],
-            "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-            ],
+            "scripts": [],
             "serviceWorker": true,
             "ngswConfigPath": "ngsw-config.json"
           },

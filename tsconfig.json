@@ -22,7 +22,24 @@
     "lib": [
       "ES2022",
       "dom"
-    ]
+    ],
+    "paths": {
+        "@fuse/*": [
+            "@fuse/src/@fuse/*"
+        ],
+        "@app/*": [
+            "@lib/src/app/*"
+        ],
+        "@ssr/*": [
+            "@lib/src/@ssr/*"
+        ],
+        "@lib/*": [
+            "@lib/src/@lib/*"
+        ],
+        "app/*": [
+             "app/*"
+           ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

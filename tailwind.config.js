@@ -1,6 +1,6 @@
 const path = require('path');
 const colors = require('tailwindcss/colors');
-const  buildConfig =  require(path.resolve(__dirname, ('../@lib/tailwind.config-builder')));
+const  buildConfig =  require(path.resolve(__dirname, ('@lib/tailwind.config-builder')));
 
 /**
  * Custom themes

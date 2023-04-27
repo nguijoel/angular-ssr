@@ -1,0 +1,58 @@
+/* ----------------------------------------------------------------------------------------------------- */
+/*  @ Import/write your custom styles here.
+/*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
+/* ----------------------------------------------------------------------------------------------------- */
+a:link {
+   @apply hover:underline;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+   @apply font-mono;
+}
+
+article {
+   p {
+      @apply py-2;
+   }
+
+   a {
+      @apply text-accent;
+   }
+}
+
+//Site Utilities
+.app-page-content {
+   @apply w-full;
+   @apply max-w-5xl;
+   @apply mx-auto;
+   @apply mt-20;
+   @apply px-5;
+   @screen md {
+      @apply px-10;
+   }
+}
+
+//Form
+mat-form-field {
+   &.with-button {
+      .mat-mdc-form-field.mat-form-field-appearance-fill
+         .mat-mdc-text-field-wrapper
+         .mat-mdc-form-field-flex
+         .mat-mdc-form-field-infix {
+         min-height: 42px !important;
+      }
+
+      .mat-mdc-text-field-wrapper {
+         @apply rounded-full #{!important};
+      }
+
+      .mat-mdc-form-field-flex {
+         padding: 0 4px !important;
+     }
+   }
+}
